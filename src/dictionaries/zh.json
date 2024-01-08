@@ -1,0 +1,16 @@
+{
+  "navigation": {
+    "home": "首頁",
+    "about": "關於"
+  },
+  "page": {
+    "home": {
+      "title": "歡迎來到可怕的地方",
+      "description": "邁向下一個框架套件13之路"
+    },
+    "about": {
+      "title": "關於我們",
+      "description": "這是關於我們"
+    }
+  }
+}
