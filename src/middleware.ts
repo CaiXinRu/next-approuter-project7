@@ -13,28 +13,44 @@ function getLocale(request: NextRequest): string | undefined {
   // @ts-ignore locales are readonly
   const locales: string[] = i18n.locales;
   const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
-
+  // matchLocale會做陣列比對，取最多次出現且順序第一的語言
   const locale = matchLocale(languages, locales, i18n.defaultLocale);
   return locale;
 }
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const pathnameIsMissingLocale = i18n.locales.every(
-    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+  const pathnameHasLocale = i18n.locales.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
-  console.log('pathnameIsMissingLocale', pathnameIsMissingLocale)
+
+  if (pathnameHasLocale) return;
+  const locale = getLocale(request);
+  request.nextUrl.pathname = `/${locale}${pathname}`;
+  // e.g. incoming request is /products
+  // The new URL is now /en-US/products
+  return NextResponse.redirect(
+    new URL(
+      `/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
+      request.url
+    )
+  );
+
+  // const pathnameIsMissingLocale = i18n.locales.every(
+  //   (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+  // );
+
   // Redirect if there is no locale
-  if (pathnameIsMissingLocale) {
-    const locale = i18n.defaultLocale;
-    console.log(locale)
-    return NextResponse.redirect(
-      new URL(
-        `/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
-        request.url
-      )
-    );
-  }
+
+  // if (pathnameIsMissingLocale) {
+  //   const locale = i18n.defaultLocale;
+  //   return NextResponse.redirect(
+  // new URL(
+  //   `/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
+  //   request.url
+  // )
+  //   );
+  // }
 }
 
 export const config = {

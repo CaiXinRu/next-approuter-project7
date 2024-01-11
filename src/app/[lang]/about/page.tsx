@@ -1,5 +1,18 @@
 import { Locale } from "@/i18n.config";
 import { getDictionary } from "@/src/lib/dictionary";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: { absolute: "About" },
+  alternates: {
+    canonical: "/about",
+    languages: {
+      zh: "http://localhost:3001/zh/about",
+      de: "http://localhost:3001/de/about",
+      en: "http://localhost:3001/en/about",
+    },
+  },
+};
 
 export default async function About({
   params: { lang },
