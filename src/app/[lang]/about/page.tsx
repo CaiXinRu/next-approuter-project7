@@ -19,13 +19,13 @@ export default async function About({
 }: {
   params: { lang: Locale };
 }) {
-  const { page } = await getDictionary(lang);
+  const i = await getDictionary(lang, "about");
 
   return (
     <section className="py-24">
       <div className="container">
-        <h1 className="text-3xl font-bold">{page.about.title}</h1>
-        <p className="text-gray-500">{page.about.description}</p>
+        <h1 className="text-3xl font-bold">{i.title}</h1>
+        <p className="text-gray-500">{i.description}</p>
       </div>
     </section>
   );

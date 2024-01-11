@@ -4,7 +4,7 @@ import { getDictionary } from "@/src/lib/dictionary";
 import LocaleSwitcher from "./locale-switcher";
 
 export default async function Header({ lang }: { lang: Locale }) {
-  const { navigation } = await getDictionary(lang);
+  const navigation = await getDictionary(lang, "navigation");
 
   return (
     <header className="py-6">
