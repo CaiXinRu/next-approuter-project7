@@ -1,4 +1,5 @@
 {
   "title": "Willkommen bei NextJs i18n",
-  "description": "Internationalisierung im NextJs 13 App-Router"
+  "description": "Internationalisierung im NextJs 13 App-Router",
+  "money": "Derzeit beträgt mein Vermögen {{money}} Yuan"
 }

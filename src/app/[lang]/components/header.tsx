@@ -16,6 +16,9 @@ export default async function Header({ lang }: { lang: Locale }) {
           <li>
             <Link href={`/${lang}/about`}>{navigation.about}</Link>
           </li>
+          <li>
+            <Link href={`/${lang}/press`}>{navigation.press}</Link>
+          </li>
         </ul>
         <LocaleSwitcher />
       </nav>
