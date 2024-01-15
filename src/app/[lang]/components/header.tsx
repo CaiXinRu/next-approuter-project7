@@ -20,7 +20,7 @@ export default async function Header({ lang }: { lang: Locale }) {
             <Link href={`/${lang}/press`}>{i.press}</Link>
           </li>
         </ul>
-        <LocaleSwitcher lang={`${lang}`} />
+        <LocaleSwitcher />
       </nav>
     </header>
   );

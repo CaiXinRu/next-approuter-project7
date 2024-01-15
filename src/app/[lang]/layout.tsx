@@ -55,12 +55,12 @@ export default function RootLayout({
       <body className={`${inter.className} container px-16`}>
         <Header lang={params.lang} />
         <NextBreadcrumb
-          homeElement={"Home"}
           separator={<span> {">"} </span>}
           activeClasses="text-amber-700"
-          containerClasses="flex py-2 bg-amber-100 w-max"
+          containerClasses="flex py-2 bg-amber-100 w-max text-xs"
           listClasses="hover:underline mx-2 font-bold"
           capitalizeLinks
+          lang={params.lang}
         />
         <main className="container">{children}</main>
       </body>
