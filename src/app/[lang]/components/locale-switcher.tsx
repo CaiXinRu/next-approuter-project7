@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { i18n } from "@/i18n.config";
-
 export default function LocaleSwitcher() {
   const pathName = usePathname();
 
@@ -15,20 +13,24 @@ export default function LocaleSwitcher() {
     return segments.join("/");
   };
 
+  const languages = [
+    { key: "en", label: "English" },
+    { key: "de", label: "Deutsch" },
+    { key: "zh", label: "繁體中文" },
+  ];
+
   return (
     <ul className="flex gap-x-3">
-      {i18n.locales.map((locale) => {
-        return (
-          <li key={locale}>
-            <Link
-              href={redirectedPathName(locale)}
-              className="rounded-md border bg-black px-3 py-2 text-white"
-            >
-              {locale}
-            </Link>
-          </li>
-        );
-      })}
+      {languages.map(({ key, label }) => (
+        <li key={key}>
+          <Link
+            href={redirectedPathName(key)}
+            className="rounded-md border bg-black px-3 py-2 text-white"
+          >
+            {label}
+          </Link>
+        </li>
+      ))}
     </ul>
   );
 }

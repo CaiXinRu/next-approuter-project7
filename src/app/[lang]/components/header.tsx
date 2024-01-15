@@ -4,23 +4,23 @@ import { getDictionary } from "@/src/lib/dictionary";
 import LocaleSwitcher from "./locale-switcher";
 
 export default async function Header({ lang }: { lang: Locale }) {
-  const navigation = await getDictionary(lang, "navigation");
+  const i = await getDictionary(lang, "navigation");
 
   return (
     <header className="py-6">
       <nav className="container flex items-center justify-between">
         <ul className="flex gap-x-8">
           <li>
-            <Link href={`/${lang}`}>{navigation.home}</Link>
+            <Link href={`/${lang}`}>{i.home}</Link>
           </li>
           <li>
-            <Link href={`/${lang}/about`}>{navigation.about}</Link>
+            <Link href={`/${lang}/about`}>{i.about}</Link>
           </li>
           <li>
-            <Link href={`/${lang}/press`}>{navigation.press}</Link>
+            <Link href={`/${lang}/press`}>{i.press}</Link>
           </li>
         </ul>
-        <LocaleSwitcher />
+        <LocaleSwitcher lang={`${lang}`} />
       </nav>
     </header>
   );
