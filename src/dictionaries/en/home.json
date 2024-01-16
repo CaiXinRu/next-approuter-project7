@@ -1,5 +1,1 @@
-{
-  "title": "Welcome to NextJs i18n",
-  "description": "Internationalization in NextJs 13 App router",
-  "money": "Currently my assets are {{money}} yuan"
-}
+{"title":"Welcome to NextJs i18n","description":"Internationalization in NextJs 13 App router","money":"Currently my assets are {{money}} yuan"}
