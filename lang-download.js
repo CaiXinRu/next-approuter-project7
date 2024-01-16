@@ -2,13 +2,15 @@
 // 本機執行工具，取得遠端 google-spreadsheet 文件的CSV，再轉成json格式儲存
 // 在TERMINAL輸入指令node lang-download.js即可載入語言包
 
-const fs = require("fs");
+const fs = require("fs").promises; // 使用 fs.promises 可以使 fs 操作變為 Promise-based
 const { parse } = require("csv-parse");
 const axios = require("axios");
 
-const TW_PATH = "./src/dictionaries/zh/";
-const EN_PATH = "./src/dictionaries/en/";
-const DE_PATH = "./src/dictionaries/de/";
+const LANG_PATHS = {
+  tw: "./src/dictionaries/zh/",
+  en: "./src/dictionaries/en/",
+  de: "./src/dictionaries/de/",
+};
 
 const SOURCE_CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vS2z16k-y2Zz3GVI7MKuzRWNnAd2BYgUZPJG920emmKczVifCxuSq8Ibk8Vt6CvezNwcG-ht1YT9epC/pub?output=csv";
@@ -23,78 +25,85 @@ const TAB_ARRAY = [
 
 async function fetchCsvFromUrl(url) {
   const res = await axios.get(url);
-  return await new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     parse(res.data, { columns: true }, (err, output) =>
       err ? reject(err) : resolve(output)
     );
   });
 }
 
-async function getLangs(gidVal) {
+async function getLangs(gidVal, languages) {
   if (!gidVal) {
     throw new Error("param of gidVal on getLangs is missing !");
   }
 
   try {
     const langList = await fetchCsvFromUrl(`${SOURCE_CSV_URL}&gid=${gidVal}`);
-    // console.log(langList)
-    const twTran = {};
-    const enTran = {};
-    const deTran = {};
+    const translations = {};
+
+    languages.forEach((lang) => {
+      translations[lang] = {};
+    });
 
     langList.forEach((item) => {
       if (!item.key) return;
 
-      twTran[item.key.trim()] = item?.tw?.trim() || "";
-      enTran[item.key.trim()] = item?.en?.trim() || "";
-      deTran[item.key.trim()] = item?.de?.trim() || "";
+      languages.forEach((lang) => {
+        translations[lang][item.key.trim()] = item[lang]?.trim() || "";
+      });
     });
 
-    return { twTran, enTran, deTran };
+    return translations;
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
+    throw err;
   }
 }
 
-function writeJsonFile(path, data) {
-  fs.access(path, fs.F_OK, (err) => {
-    if (err) {
-      console.log(`${path} 不存在，請新增此路徑檔案`);
-    }
+async function writeJsonFile(path, data) {
+  try {
+    await fs.access(path);
+    console.log(`${path} 存在`);
+  } catch (err) {
+    console.log(`${path} 不存在，請新增此路徑檔案`);
+  }
 
-    const jsonData = JSON.stringify(data);
-    try {
-      fs.writeFile(path, jsonData, (err) => {
-        if (err) throw err;
-        console.log(`${path} 文件寫入成功 `);
-      });
-    } catch (err) {
-      console.log(`${path} 文件寫入失敗 `);
-      console.log(err.message);
-    }
-  });
+  const jsonData = JSON.stringify(data, null, 2);
+  try {
+    await fs.writeFile(path, jsonData);
+    console.log(`${path} 文件寫入成功 `);
+  } catch (err) {
+    console.error(`${path} 文件寫入失敗 `);
+    console.error(err.message);
+  }
 }
 
-// ----
-
 async function main() {
+  const languages = Object.keys(LANG_PATHS);
+
   for (const item of TAB_ARRAY) {
-    const { twTran, enTran, deTran } = await getLangs(item.gid);
-    if (
-      !Object.keys(twTran).length ||
-      !Object.keys(enTran).length ||
-      !Object.keys(deTran).length
-    ) {
-      console.warn(
-        ` ${item.gid}, ${item.fileName} 中文 / 英文 / 德文語系可能全都是空白的語言包, 已中止運行`
-      );
+    try {
+      const translations = await getLangs(item.gid, languages);
+
+      if (languages.some((lang) => !Object.keys(translations[lang]).length)) {
+        console.warn(
+          ` ${item.gid}, ${item.fileName} 語系可能全都是空白的語言包, 已中止運行`
+        );
+        console.log("---");
+        return;
+      }
+
+      languages.forEach((lang) => {
+        writeJsonFile(
+          `${LANG_PATHS[lang]}${item.fileName}`,
+          translations[lang]
+        );
+      });
+
       console.log("---");
-      return;
+    } catch (err) {
+      console.error(err.message);
     }
-    writeJsonFile(`${TW_PATH}${item.fileName}`, twTran);
-    writeJsonFile(`${EN_PATH}${item.fileName}`, enTran);
-    writeJsonFile(`${DE_PATH}${item.fileName}`, deTran);
-    console.log("---");
   }
 }
 
