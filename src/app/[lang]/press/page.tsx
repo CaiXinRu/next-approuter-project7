@@ -4,7 +4,7 @@ import { getDictionary } from "@/src/lib/dictionary";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: { absolute: "Press" },
+  title: "Press",
   alternates: {
     canonical: "/press",
     languages: {

@@ -2,5 +2,8 @@
   "home": "Home",
   "about": "About",
   "press": "Press",
-  "news": "News"
+  "news": "News",
+  "login": "Log In",
+  "signin": "Sign In",
+  "signup": "Sign Out"
 }

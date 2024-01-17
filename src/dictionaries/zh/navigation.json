@@ -2,5 +2,8 @@
   "home": "首頁",
   "about": "關於",
   "press": "新聞",
-  "news": "最新消息"
+  "news": "最新消息",
+  "login": "會員登入",
+  "signin": "登入",
+  "signup": "立即註冊"
 }

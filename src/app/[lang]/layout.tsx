@@ -4,8 +4,13 @@ import { Locale, i18n } from "@/i18n.config";
 import Header from "./components/header";
 import NextBreadcrumb from "./components/nextBreadcrumb";
 
-import { Inter } from "next/font/google";
-const inter = Inter({ subsets: ["latin"] });
+import { Inter as FontSans } from "next/font/google";
+export const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+import { cn } from "@/src/lib/utils";
 
 export const metadata: Metadata = {
   title: {
@@ -52,12 +57,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang={params.lang}>
-      <body className={`${inter.className} container px-16`}>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased container px-16",
+          fontSans.variable
+        )}
+      >
         <Header lang={params.lang} />
         <NextBreadcrumb
           separator={<span> {">"} </span>}
           activeClasses="text-amber-700"
-          containerClasses="flex py-2 bg-amber-100 w-max text-xs"
+          containerClasses="flex py-2 bg-amber-100 w-max text-xs mx-16"
           listClasses="hover:underline mx-2 font-bold"
           capitalizeLinks
           lang={params.lang}

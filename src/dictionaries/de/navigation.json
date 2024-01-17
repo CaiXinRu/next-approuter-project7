@@ -2,5 +2,8 @@
   "home": "Startseite",
   "about": "Über",
   "press": "Nachricht",
-  "news": "neueste Nachrichten"
+  "news": "neueste Nachrichten",
+  "login": "Anmeldung",
+  "signin": "Anmelden",
+  "signup": "Abmelden"
 }
